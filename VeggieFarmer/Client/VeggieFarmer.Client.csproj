@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.11" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\VeggieFarmer.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Watch Include="**\*.scss" />
+		<None Update="**\*.css" watch="false" />
+	</ItemGroup>
+
+	<!-- Compile SCSS files into CSS -->
+	<ItemGroup>
+		<ComponentScssFiles Include="**/*/*.scss" Exclude="node_modules/**;wwwroot/**;Styles/**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="NewFolder\**" />
+	  <Compile Remove="wwwroot\NewFolder\**" />
+	  <ComponentScssFiles Remove="NewFolder\**" />
+	  <ComponentScssFiles Remove="wwwroot\NewFolder\**" />
+	  <Content Remove="NewFolder\**" />
+	  <Content Remove="wwwroot\NewFolder\**" />
+	  <EmbeddedResource Remove="NewFolder\**" />
+	  <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+	  <None Remove="NewFolder\**" />
+	  <None Remove="wwwroot\NewFolder\**" />
+	  <Watch Remove="NewFolder\**" />
+	  <Watch Remove="wwwroot\NewFolder\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Styles\Core\_mixin.scss" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Watch Remove="Styles\Core\_functions.scss" />
+	  <Watch Remove="Styles\Core\_mixin.scss" />
+	  <Watch Remove="Styles\Core\_mixins.scss" />
+	  <Watch Remove="Styles\Core\_typography.scss" />
+	  <Watch Remove="Styles\Core\_variables.scss" />
+	</ItemGroup>
+
+	<Target Name="CompileComponentSass" BeforeTargets="CompileGlobalSass">
+		<Message Text="Compiling Component SCSS files" Importance="high" />
+		<Exec Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(ComponentScssFiles.Identity)', `.*[/\\]_.*`))" Command="npm run sass -- --style=compressed --no-source-map --load-path=Styles/Core %(ComponentScssFiles.Identity) %(relativedir)%(filename).css" />
+	</Target>
+
+	<Target Name="CompileGlobalSass" BeforeTargets="Compile">
+		<Message Text="Compiling global SCSS file" Importance="high" />
+		<Exec Command="npm run sass -- --style=compressed Styles:wwwroot/css" />
+	</Target>
+
+</Project>
