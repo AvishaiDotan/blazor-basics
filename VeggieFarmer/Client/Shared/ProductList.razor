@@ -3,7 +3,7 @@
 
 @if (ProductService.Products == null || ProductService.Products.Count == 0)
 {
-    <p>Loading...</p>
+    <p>@ProductService.Message</p>
 }
 else
 {
@@ -16,7 +16,7 @@ else
                         <h3>@Product.Title</h3>
                         <h4>@Product.Description</h4>
                         <img src="@Product.ImgUrl" />
-                        <p>@Product.Price</p>
+                        <p>@GetPriceString(Product)</p>
                     </article>
                 </a>
             </li>
@@ -34,6 +34,16 @@ else
     public void Dispose()
     {
         ProductService.ProductsChanged -= StateHasChanged;
+    }
+
+    public string GetPriceString(Product product)
+    {
+        var variants = product.Variants;
+
+        if (variants.Count == 0) return string.Empty;
+        else if (variants.Count == 1) return $"${variants[0].Price}";
+        else return $"Starting at {variants.Min(v => v.Price)}";
+
     }
 
 }

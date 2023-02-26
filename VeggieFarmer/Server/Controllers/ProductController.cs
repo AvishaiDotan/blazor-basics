@@ -34,6 +34,22 @@ namespace VeggieFarmer.Server.Controllers
             var result = await _productService.GetProductByCategory(categoryUrl);
             return Ok(result);
         }
+
+
+        [HttpGet("search/{searchText}/{page}")]
+        public async Task<ActionResult<ServiceResponse<ProductSearchResult>>> SearchProducts(string searchText, int page)
+        {
+            var result = await _productService.SearchProducts(searchText, page);
+            return Ok(result);
+        }
+
+        [HttpGet("searchsuggestions/{searchText}")]
+        public async Task<ActionResult<ServiceResponse<Product>>> GetGetProductSearchSuggestions(string searchText) 
+        {
+            var result = await _productService.GetProductSearchSuggestions(searchText);
+            return Ok(result);
+        }
+
     }
 
 
