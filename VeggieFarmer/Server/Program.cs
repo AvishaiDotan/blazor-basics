@@ -2,6 +2,7 @@ global using VeggieFarmer.Shared;
 global using VeggieFarmer.Server.Data;
 global using Microsoft.EntityFrameworkCore;
 global using VeggieFarmer.Server.Services.ProductService;
+global using VeggieFarmer.Server.Services.CategoryService;
 
 using Microsoft.AspNetCore.ResponseCompression;
 
@@ -23,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 app.UseSwaggerUI();
